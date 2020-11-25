@@ -1,6 +1,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <vector>
+#include <sstream>
 using namespace std;
 
 void passByRef(int& x) {
@@ -54,6 +55,17 @@ void strayPointer() {
 }
 
 int main() {
+    vector<vector<int> > open(3, vector<int>(1));
+    vector<vector<int> > valCopy = open;
+    vector<vector<int> > *refCopy = &open;
+    vector<int> node(2,2);
+    vector<int> node3(3,3);
+    valCopy.push_back(node);
+    refCopy->push_back(node3);
+
+    // std::vector<std::vector<int> > fog(
+    // 3,
+    // std::vector<int>(1));
     strayPointer();
     SimpleCat * cat = new SimpleCat;
     // access data members
