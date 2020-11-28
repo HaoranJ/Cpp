@@ -23,4 +23,9 @@ void AssignByValueOrReference() {
   */
   int i = 1;
   int& j = i; // j is another reference to i
+
+  /*
+  Ref-sign(&) in front of function
+  https://stackoverflow.com/questions/23776784/use-of-operator-before-a-function-name-in-c/23777436
+  */
 }

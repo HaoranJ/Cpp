@@ -20,7 +20,7 @@ int ReadFile () {
   else cout << "Unable to open file"; 
 
   string b("1,2,3");
-C
+
   std::istringstream my_stream(b);
   char c;
   int n;
