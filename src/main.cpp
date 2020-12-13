@@ -23,10 +23,8 @@ int numberOfSteps (int num) {
 g++ -std=c++17 hello.cpp
 */
 int main() {
-    int n1 = 1;
-    string s1 = "Aug";
-    string comb = s1 + to_string(n1);
-    cout << comb;
+    // MyDate date(1, 1);
+    // date.Day(8);
     // Pointer bacics
     /*
      * DO use the indirection operator (*) to access the data stored at the address in a pointer.
@@ -36,6 +34,7 @@ int main() {
      * of which pointer owns an area of memory and to ensure that the memory is returned to the free store when you are done with it.
      * To be safe, after you delete a pointer, set it to null (0). This disarms the pointer.
      */
+    char str1[] = "Udacity";
     int *ptr;
     ptr = new int;
     *ptr = 5;
