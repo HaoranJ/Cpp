@@ -3,3 +3,5 @@
 hello
 build/
 build/CMakeFiles
+.idea/
+cmake-build-debug/
