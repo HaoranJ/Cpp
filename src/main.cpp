@@ -23,8 +23,8 @@ int numberOfSteps (int num) {
 g++ -std=c++17 hello.cpp
 */
 int main() {
-    // MyDate date(1, 1);
-    // date.Day(8);
+     MyDate date(1, 1);
+     date.Day(8);
     // Pointer bacics
     /*
      * DO use the indirection operator (*) to access the data stored at the address in a pointer.
