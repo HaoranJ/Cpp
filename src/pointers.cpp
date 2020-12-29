@@ -2,6 +2,8 @@
 #include <unordered_map>
 #include <vector>
 #include <sstream>
+#include <stdio.h>
+#include <stdlib.h>
 using namespace std;
 
 void AssignByValueOrReference() {
@@ -29,3 +31,44 @@ void AssignByValueOrReference() {
   https://stackoverflow.com/questions/23776784/use-of-operator-before-a-function-name-in-c/23777436
   */
 }
+
+/*
+Pointers can be declared without initialization. This means we can pass an uninitialized pointer to a function who then internally performs the initialization for us.
+
+Pointers can be reassigned to another memory block on the heap. Reference must be bound to existing address.
+
+References are usually easier to use (depending on the expertise level of the programmer). Sometimes however, if a third-party function is used without properly looking at the parameter definition, it might go unnoticed that a value has been modified.
+*/
+void CallByValue(int i)
+{
+    int j = 1; 
+    printf ("call-by-value: %p\n",&j);
+}
+
+void CallByPointer(int *i)
+{
+    int j = 1; 
+    printf ("call-by-pointer: %p\n",&j);
+}
+
+void CallByReference(int &i)
+{
+    int j = 1; 
+    printf ("call-by-value: %p\n",&j);
+}
+
+int main() {
+  int i  = 0 ;
+  CallByValue(i);
+  CallByPointer(&i);
+  CallByReference(i);
+
+  /*
+  Dangling Pointer
+  */
+  int *p = (int *)malloc(sizeof(int));
+  int *p1 = p;
+  free(p); //okay
+  free(p1); //error - dangling pointer
+}
+
