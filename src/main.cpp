@@ -15,6 +15,15 @@ int numberOfSteps (int num) {
 g++ -std=c++17 hello.cpp
 */
 int main() {
+    int *p = new int;
+    *p = 1;
+    int *p2 = new int;
+    *p2 = 2;
+    *p = *p2;
+    std::cout << p << std::endl;
+    std::cout << *p << std::endl;
+    std::cout << p2 << std::endl;
+    std::cout << *p2 << std::endl;
     // Pointer bacics
     /*
      * DO use the indirection operator (*) to access the data stored at the address in a pointer.
