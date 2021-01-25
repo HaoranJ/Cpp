@@ -2,16 +2,8 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-#include <sstream>
-#include <iostream>
-#include <ratio>
-#include <chrono>
-#include <thread>
-#include <numeric>
 #include <functional>
 #include <deque>
-
-#include "ood.h"
 #include "algorithm_utils.h"
 
 using namespace std;
@@ -50,8 +42,8 @@ int findClosestLeaf(TreeNode *root, int k) {
       graph[cur].emplace_back(parent);
       graph[parent].emplace_back(cur);
     }
-    buildGraph(root->left, root);
-    buildGraph(root->right, root);
+    buildGraph(cur->left, cur);
+    buildGraph(cur->right, cur);
   };
   buildGraph(root, nullptr);
 
@@ -61,7 +53,7 @@ int findClosestLeaf(TreeNode *root, int k) {
   while (!que.empty()) {
     TreeNode *cur = que.front();
     que.pop_front();
-    if (cur->left == nullptr && cur->right == nullptr) {
+    if (!cur->left && !cur->right) {
       return cur->val;
     }
     visited.emplace(cur);
@@ -83,7 +75,7 @@ int main()
   n2 = new TreeNode(2);
   root->left = n3;
   root->right = n2;
-  findClosestLeaf(root, 1);
+  int ans = findClosestLeaf(root, 1);
 
   // Pointer bacics
   /*
