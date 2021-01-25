@@ -46,7 +46,10 @@
         "thread": "cpp",
         "chrono": "cpp",
         "ctime": "cpp",
-        "ratio": "cpp"
+        "ratio": "cpp",
+        "future": "cpp",
+        "condition_variable": "cpp",
+        "mutex": "cpp"
     },
     "cmake.configureOnOpen": true
 }

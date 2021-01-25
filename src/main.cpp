@@ -1,13 +1,18 @@
 #include <iostream>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 #include <sstream>
 #include <iostream>
 #include <ratio>
 #include <chrono>
 #include <thread>
+#include <numeric>
+#include <functional>
+#include <deque>
 
 #include "ood.h"
+#include "algorithm_utils.h"
 
 using namespace std;
 
@@ -33,21 +38,52 @@ void f(Node n0) {
   std::cout << "n0 address = " << &n0 << " val address = " << &(n0.val) << " p address = " << n0.p << std::endl;
 }
 
+int findClosestLeaf(TreeNode *root, int k) {
+  unordered_map<TreeNode *, vector<TreeNode*>> graph;
+  TreeNode *target = nullptr;
+  function<void(TreeNode *, TreeNode *)> buildGraph = [&](TreeNode *cur, TreeNode *parent) {
+    if (!cur) { return; }
+    if (cur->val == k) {
+      target = cur;
+    }
+    if (parent) {
+      graph[cur].emplace_back(parent);
+      graph[parent].emplace_back(cur);
+    }
+    buildGraph(root->left, root);
+    buildGraph(root->right, root);
+  };
+  buildGraph(root, nullptr);
+
+  deque<TreeNode*> que;
+  unordered_set<TreeNode*> visited;
+  que.emplace_back(target);
+  while (!que.empty()) {
+    TreeNode *cur = que.front();
+    que.pop_front();
+    if (cur->left == nullptr && cur->right == nullptr) {
+      return cur->val;
+    }
+    visited.emplace(cur);
+    for (auto &kid : graph[cur]) {
+      if (visited.find(kid) != visited.end()) { continue; }
+      que.emplace_back(kid);
+    }
+  }
+  return -1;
+}
+
 int main()
 {
-  Node n0;
-  Node n1(1);
-  Node *n2 = new Node(2);
-  std::cout << "n0 address = " << &n0 << " val address = " << &(n0.val) << " p address = " << n0.p << std::endl;
-  std::cout << "n1 address = " << &n1 << " val address = " << &(n1.val) << " p address = " << n1.p << std::endl;
-  std::cout << "n2 address = " << n2 << " val address = " << &(n2->val) << " p address = " << n2->p << std::endl;
-  f(n0);
-  f(n1);
-  int *p = new int;
-  *p = 1;
-  int *p2 = new int;
-  *p2 = 2;
-  *p = *p2;
+  TreeNode* root;
+  TreeNode *n3;
+  TreeNode* n2;
+  root = new TreeNode(1);
+  n3 = new TreeNode(3);
+  n2 = new TreeNode(2);
+  root->left = n3;
+  root->right = n2;
+  findClosestLeaf(root, 1);
 
   // Pointer bacics
   /*
