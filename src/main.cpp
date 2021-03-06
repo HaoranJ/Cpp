@@ -2,17 +2,10 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-#include <sstream>
-#include <iostream>
-#include <ratio>
-#include <chrono>
-#include <thread>
-#include <numeric>
 #include <functional>
 #include <deque>
 #include <climits>
 #include <type_traits>
-
 #include "ood.h"
 #include "algorithm_utils.h"
 
@@ -52,8 +45,8 @@ int findClosestLeaf(TreeNode *root, int k) {
       graph[cur].emplace_back(parent);
       graph[parent].emplace_back(cur);
     }
-    buildGraph(root->left, root);
-    buildGraph(root->right, root);
+    buildGraph(cur->left, cur);
+    buildGraph(cur->right, cur);
   };
   buildGraph(root, nullptr);
 
@@ -63,7 +56,7 @@ int findClosestLeaf(TreeNode *root, int k) {
   while (!que.empty()) {
     TreeNode *cur = que.front();
     que.pop_front();
-    if (cur->left == nullptr && cur->right == nullptr) {
+    if (!cur->left && !cur->right) {
       return cur->val;
     }
     visited.emplace(cur);
@@ -94,22 +87,6 @@ class DDClass : public DerivedClass {
 
 int main()
 {
-  std::vector<int64_t> streams;
-  // auto stream = streams.begin();
-  for (int i = 0; i < 3; ++i) {
-    // if (stream == streams.end()) {
-    //   streams.push_back(i);
-    //   stream = streams.end() - 1;
-    // }
-    // *stream += 1;
-    // // ++stream;
-
-    streams.push_back(i);
-
-    streams.back() += 1;
-    // ++stream;
-  }
-
   // Pointer bacics
   /*
      * DO use the indirection operator (*) to access the data stored at the address in a pointer.
