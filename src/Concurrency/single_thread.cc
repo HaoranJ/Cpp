@@ -21,7 +21,7 @@ int main()
     // create thread
     std::thread t2(threadFunction2);
     
-    // main thread waits for the thread t to finish
+    // main thread waits for the thread t2 to finish running
     t2.join();
 
     // detach thread t and continue with main

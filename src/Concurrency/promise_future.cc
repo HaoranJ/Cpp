@@ -38,6 +38,7 @@ int main() {
   std::cout << "Original message from main(): " << msgToThread << std::endl;
 
   auto status = ftr.wait_for(std::chrono::milliseconds(1000));
+  // ftr.wait_until
   if (status == std::future_status::ready) {
     std::string msgFromThread = ftr.get();
     // std::string msgAgain = ftr.get() --> throw exception! 

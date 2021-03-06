@@ -10,6 +10,8 @@
 #include <numeric>
 #include <functional>
 #include <deque>
+#include <climits>
+#include <type_traits>
 
 #include "ood.h"
 #include "algorithm_utils.h"
@@ -73,17 +75,40 @@ int findClosestLeaf(TreeNode *root, int k) {
   return -1;
 }
 
+class BaseClass {
+public:
+   virtual void disp() {};
+};
+class DerivedClass: public BaseClass{
+public:
+   void disp() override {
+      cout<<"Function of Child Class";
+   }
+};
+class DDClass : public DerivedClass {
+  public:
+  void disp() override {
+    cout<<"Function of Grand child Class";
+  }
+};
+
 int main()
 {
-  TreeNode* root;
-  TreeNode *n3;
-  TreeNode* n2;
-  root = new TreeNode(1);
-  n3 = new TreeNode(3);
-  n2 = new TreeNode(2);
-  root->left = n3;
-  root->right = n2;
-  findClosestLeaf(root, 1);
+  std::vector<int64_t> streams;
+  // auto stream = streams.begin();
+  for (int i = 0; i < 3; ++i) {
+    // if (stream == streams.end()) {
+    //   streams.push_back(i);
+    //   stream = streams.end() - 1;
+    // }
+    // *stream += 1;
+    // // ++stream;
+
+    streams.push_back(i);
+
+    streams.back() += 1;
+    // ++stream;
+  }
 
   // Pointer bacics
   /*
