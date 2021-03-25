@@ -2,6 +2,10 @@
 #include <iostream>
 
 /*
+The presence of user-defined constructor will prevent the implicit default constructor, 
+but won't stop generation of default copy c'tor, default move c'tor, etc.
+
+For the following five, if any is user-defined or explicitly default/delete, it will prevent the generation of the rest of 4. Thus, we need rule of five. 
 The destructor: Responsible for freeing the resource once the object it belongs to goes out of scope.
 
 The assignment operator: The default assignment operation performs a member-wise shallow copy, which does not copy the content behind the resource handle. If a deep copy is needed, it has be implemented by the programmer.
