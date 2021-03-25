@@ -19,10 +19,10 @@ private:
   int _id;
 };
 
-class WaitingVehicles
+class MessageQueue
 {
 public:
-  WaitingVehicles() : _tmpVehicles(0) {}
+  MessageQueue() : _tmpVehicles(0) {}
 
   // getters / setters
   void printSize()
@@ -51,12 +51,12 @@ private:
 
 int main()
 {
-  std::shared_ptr<WaitingVehicles> queue(new WaitingVehicles);
+  std::shared_ptr<MessageQueue> queue(new MessageQueue);
   std::vector<std::future<void>> futures;
   for (int i = 0; i < 1000; ++i)
   {
     Vehicle v(i);
-    futures.emplace_back(std::async(std::launch::async, &WaitingVehicles::pushBack, queue, std::move(v)));
+    futures.emplace_back(std::async(std::launch::async, &MessageQueue::pushBack, queue, std::move(v)));
   }
   
   std::for_each(futures.begin(), futures.end(), [](std::future<void> &ftr) {
