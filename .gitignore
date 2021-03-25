@@ -5,3 +5,4 @@ build/
 build/CMakeFiles
 .idea/
 cmake-build-debug/
+src/Games/
