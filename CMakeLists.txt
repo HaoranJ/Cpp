@@ -4,4 +4,4 @@ set(CMAKE_CXX_STANDARD 17)
 
 project(Cpp)
 
-add_executable(main src/main.cpp src/ood.cpp src/ood.h)
+add_executable(main src/main.cpp src/ood.cpp src/ood.h src/map.cpp)

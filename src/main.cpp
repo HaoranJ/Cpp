@@ -3,6 +3,7 @@
 #include <unordered_set>
 #include <vector>
 #include <functional>
+#include <stack>
 #include <deque>
 #include <climits>
 #include <type_traits>
@@ -11,61 +12,26 @@
 
 using namespace std;
 
-int numberOfSteps(int num)
-{
-  return num ? __builtin_popcount(num) * 2 - 1 + (32 - __builtin_clz(num) - __builtin_popcount(num)) : 0;
-}
-
-class Node
-{
-  public:
-  int val;
-  int *p;
-  Node() {}
-  Node(int x) {
-    val = x;
-    p = new int;
-    *p = x;
-  }
-};
-
-void f(Node n0) {
-  std::cout << "n0 address = " << &n0 << " val address = " << &(n0.val) << " p address = " << n0.p << std::endl;
-}
-
-int findClosestLeaf(TreeNode *root, int k) {
-  unordered_map<TreeNode *, vector<TreeNode*>> graph;
-  TreeNode *target = nullptr;
-  function<void(TreeNode *, TreeNode *)> buildGraph = [&](TreeNode *cur, TreeNode *parent) {
-    if (!cur) { return; }
-    if (cur->val == k) {
-      target = cur;
-    }
-    if (parent) {
-      graph[cur].emplace_back(parent);
-      graph[parent].emplace_back(cur);
-    }
-    buildGraph(cur->left, cur);
-    buildGraph(cur->right, cur);
-  };
-  buildGraph(root, nullptr);
-
-  deque<TreeNode*> que;
-  unordered_set<TreeNode*> visited;
-  que.emplace_back(target);
-  while (!que.empty()) {
-    TreeNode *cur = que.front();
-    que.pop_front();
-    if (!cur->left && !cur->right) {
-      return cur->val;
-    }
-    visited.emplace(cur);
-    for (auto &kid : graph[cur]) {
-      if (visited.find(kid) != visited.end()) { continue; }
-      que.emplace_back(kid);
+bool validateStackSequences(vector<int>& pushed, vector<int>& popped) {
+  stack<int> stack;
+  int pop_ptr = 0, push_ptr = 0;
+  while (pop_ptr < popped.size()) {
+    if (!stack.empty() && popped[pop_ptr] == stack.top()) {
+      stack.pop();
+      ++pop_ptr;
+    } else {
+      while (push_ptr < pushed.size()) {
+        stack.push(pushed[push_ptr]);
+        ++push_ptr;
+        if (pushed[push_ptr-1] == popped[pop_ptr]) { break; }
+      }
+      if (push_ptr == pushed.size() && pushed[push_ptr-1] != popped[pop_ptr]) {
+        return false;
+      }
     }
   }
-  return -1;
+
+  return pop_ptr == popped.size();
 }
 
 class BaseClass {
