@@ -22,6 +22,7 @@ class MessageQueue
 public:
   MessageQueue() {}
 
+  // consume
   T receive()
   {
     // perform vector modification under the lock
@@ -40,6 +41,7 @@ public:
     return v; // will not be copied due to return value optimization (RVO) in C++
   }
 
+  // produce
   void send(T &&v)
   {
     // simulate some work
