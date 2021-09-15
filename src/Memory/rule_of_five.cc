@@ -2,6 +2,8 @@
 #include <iostream>
 
 /*
+https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#Rc-five
+
 The presence of user-defined constructor will prevent the implicit default constructor, 
 but won't stop generation of default copy c'tor, default move c'tor, etc.
 
@@ -35,16 +37,16 @@ public:
     std::cout << "DELETING instance of MyMovableClass at " << this << std::endl;
     delete[] _data;
   }
-
-  MyMovableClass(const MyMovableClass &source) // 2 : copy constructor
+  // 2 : copy constructor
+  MyMovableClass(const MyMovableClass &source) 
   {
     _size = source._size;
     _data = new int[_size];
     *_data = *source._data; // deep copy
     std::cout << "COPYING content of instance " << &source << " to instance " << this << std::endl;
   }
-
-  MyMovableClass &operator=(const MyMovableClass &source) // 3 : copy assignment operator
+  // 3 : copy assignment operator
+  MyMovableClass &operator=(const MyMovableClass &source) 
   {
     std::cout << "ASSIGNING content of instance " << &source << " to instance " << this << std::endl;
     if (this == &source)
@@ -103,23 +105,22 @@ int main()
   // obj3 is not instantiated yet, obj1 is created, so copy assignment operator won't be called.
   MyMovableClass obj3 = obj1;
 
-  // call to copy constructor
-  // two expensive memory operations - create temp rvalue and copy constructor on temp rvalue
+  // obj4 is not instantiated yet. Copy elision makes temp rvalue created w/o calling copy c'tor.
   MyMovableClass obj4 = createObject(10);
 
   // call to copy assignment operator
   // erase obj4 data; reallocate it during creation of temp object; deep copy
   obj4 = createObject(20); 
 
-  /* Move Semantics
+  /*** Move Semantics
   1. When heavy-weight objects need to be passed around, we use move semantics.
   2. Move semantics ensure a single object at a time has access to the resource, it's the opposite of shared-copy policy.
   */
   std::cout << "--- Move Semantics ---" << std::endl;
-  MyMovableClass ms1(100);
-  ms1 = MyMovableClass(200); // move assignment operator
-  MyMovableClass ms2 = MyMovableClass(300);
-  MyMovableClass ms3 = std::move(ms2); // move constructor
+  MyMovableClass ms1(100); //regular c'tor
+  ms1 = MyMovableClass(200); // move assignment operator. ms1 is already instantiated, '200' is a rvalue.
+  MyMovableClass ms2 = MyMovableClass(300); //regular c'tor
+  MyMovableClass ms3 = std::move(ms2); // move constructor. ms3 is not instantiated yet. 
   MyMovableClass ms4(std::move(MyMovableClass(400))); // also move c'tor
 
   std::cout << "--- Pass-by-value function ---" << std::endl;

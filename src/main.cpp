@@ -64,9 +64,15 @@ int main()
      */
   char str1[] = "Udacity";
   int *ptr;
+  
   ptr = new int;
   *ptr = 5;
   std::cout << *ptr << std::endl; // 5
   std::cout << ptr << std::endl;  // address
+  int *p2 = ptr;
+  ptr = nullptr;
+  std::cout << (ptr == nullptr) << std::endl;
+  std::cout << *p2 << std::endl; // 5
+  std::cout << p2 << std::endl;  // address
   delete ptr;
 }

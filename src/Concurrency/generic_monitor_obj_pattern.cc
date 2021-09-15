@@ -34,6 +34,8 @@ public:
     // }
     // wait() will repeatedly check whether the vector is empty to handle
     // spurious wake-ups.
+    // enter the wait state and release the lock
+    // wait() repeatedly checks messages_.empty() to avoid spurious wake-ups
     _cond.wait(uLock, [this] { return !messages_.empty(); });
     // remove last vector element from queue
     T v = std::move(messages_.back());
