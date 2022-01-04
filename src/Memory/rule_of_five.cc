@@ -4,7 +4,7 @@
 /*
 https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#Rc-five
 
-The presence of user-defined constructor will prevent the implicit default constructor, 
+The presence of user-defined constructor will prevent the implicit default constructor,
 but won't stop generation of default copy c'tor, default move c'tor, etc.
 
 For the following five, if any is user-defined or explicitly default/delete, it will prevent the generation of the rest of 4. Thus, we need rule of five. 
@@ -32,54 +32,57 @@ public:
     std::cout << "CREATING instance of MyMovableClass at " << this << " allocated with size = " << _size * sizeof(int) << " bytes" << std::endl;
   }
 
-  ~MyMovableClass() // 1 : destructor
-  {
-    std::cout << "DELETING instance of MyMovableClass at " << this << std::endl;
-    delete[] _data;
-  }
-  // 2 : copy constructor
-  MyMovableClass(const MyMovableClass &source) 
-  {
-    _size = source._size;
-    _data = new int[_size];
-    *_data = *source._data; // deep copy
-    std::cout << "COPYING content of instance " << &source << " to instance " << this << std::endl;
-  }
-  // 3 : copy assignment operator
-  MyMovableClass &operator=(const MyMovableClass &source) 
-  {
-    std::cout << "ASSIGNING content of instance " << &source << " to instance " << this << std::endl;
-    if (this == &source)
-      return *this;
-    delete[] _data;
-    _data = new int[source._size]; //deep copy
-    *_data = *source._data;
-    _size = source._size;
-    return *this;
-  }
-
-  // 4. Move constructor
-  MyMovableClass(MyMovableClass &&source) { //rvalue reference
-    std::cout << "MOVING (c’tor) instance " << &source << " to instance " << this << std::endl;
-    _data = source._data;
-    _size = source._size;
-    source._data = nullptr;
-    source._size = 0;
-  }
-
-  // 5. move assignment constructor
-  MyMovableClass &operator=(MyMovableClass &&source) {
-    std::cout << "MOVING (assign) instance " << &source << " to instance " << this << std::endl;
-    if (this == &source) {
-      return *this;
+    ~MyMovableClass() // 1 : destructor
+    {
+        std::cout << "DELETING instance of MyMovableClass at " << this << std::endl;
+        delete[] _data;
     }
-    _data = source._data;
-    _size = source._size;
-    source._data = nullptr;
-    source._size = 0;
 
-    return *this;
-  }
+    MyMovableClass(const MyMovableClass &source) // 2 : copy constructor
+    {
+        _size = source._size;
+        _data = new int[_size];
+        *_data = *source._data; // Deep copy
+        std::cout << "COPYING content of instance " << &source << " to instance " << this << std::endl;
+    }
+
+    MyMovableClass &operator=(const MyMovableClass &source) // 3 : copy assignment operator
+    {
+        std::cout << "ASSIGNING content of instance " << &source << " to instance " << this << std::endl;
+        if (this == &source)
+            return *this;
+        delete[] _data; // Delete initial one, and assign the new one.
+        _data = new int[source._size];
+        *_data = *source._data;
+        _size = source._size;
+        return *this;
+    }
+
+    MyMovableClass(MyMovableClass &&source) // 4 : move constructor
+    {
+        std::cout << "MOVING (c’tor) instance " << &source << " to instance " << this << std::endl;
+        _data = source._data;
+        _size = source._size;
+        source._data = nullptr; // invalidate the moved-from object.
+        source._size = 0;
+    }
+
+    MyMovableClass &operator=(MyMovableClass &&source) // 5 : move assignment operator
+    {
+        std::cout << "MOVING (assign) instance " << &source << " to instance " << this << std::endl;
+        if (this == &source)
+            return *this;
+
+        delete[] _data; // clean up initial one
+
+        _data = source._data;
+        _size = source._size;
+
+        source._data = nullptr;
+        source._size = 0;
+
+        return *this;
+    }
 };
 
 MyMovableClass createObject(int size) {
@@ -105,22 +108,23 @@ int main()
   // obj3 is not instantiated yet, obj1 is created, so copy assignment operator won't be called.
   MyMovableClass obj3 = obj1;
 
-  // obj4 is not instantiated yet. Copy elision makes temp rvalue created w/o calling copy c'tor.
+  // call to copy constructor
+  // two expensive memory operations - create temp rvalue and copy constructor on temp rvalue
   MyMovableClass obj4 = createObject(10);
 
   // call to copy assignment operator
   // erase obj4 data; reallocate it during creation of temp object; deep copy
   obj4 = createObject(20); 
 
-  /*** Move Semantics
+  /* Move Semantics
   1. When heavy-weight objects need to be passed around, we use move semantics.
   2. Move semantics ensure a single object at a time has access to the resource, it's the opposite of shared-copy policy.
   */
   std::cout << "--- Move Semantics ---" << std::endl;
-  MyMovableClass ms1(100); //regular c'tor
-  ms1 = MyMovableClass(200); // move assignment operator. ms1 is already instantiated, '200' is a rvalue.
-  MyMovableClass ms2 = MyMovableClass(300); //regular c'tor
-  MyMovableClass ms3 = std::move(ms2); // move constructor. ms3 is not instantiated yet. 
+  MyMovableClass ms1(100);
+  ms1 = MyMovableClass(200); // move assignment operator
+  MyMovableClass ms2 = MyMovableClass(300);
+  MyMovableClass ms3 = std::move(ms2); // move constructor
   MyMovableClass ms4(std::move(MyMovableClass(400))); // also move c'tor
 
   std::cout << "--- Pass-by-value function ---" << std::endl;

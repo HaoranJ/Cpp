@@ -73,4 +73,39 @@ int main() {
 
   shared.reset(new MyClass);
   std::cout << "shared pointer count = " << shared.use_count() << std::endl;
+
+  std::unique_ptr<string> up0 = std::make_unique<string>("felix");
+  string* ptr = up0.get(); // internal raw pointer of up0
+  cout << "string address = " << &(*ptr) << std::endl;
+  cout << *up0.get() << " at " << up0.get() << std::endl;
+  cout << *ptr << " at " << ptr << std::endl;
+  cout << "up0 address = " << &up0 << std::endl;
+  cout << "internal pointer address = " << &ptr << std::endl;
+  std::unique_ptr<string> up1 = std::move(up0);
+  cout << "After std::move, internal pointer remains the same." << std::endl;
+  cout << *up1.get() << " at " << up1.get() << std::endl;
+  cout << *ptr << " at " << ptr << std::endl;
+  cout << "up1 address = " << &up1 << std::endl;
+  cout << "internal pointer address = " << &ptr << std::endl;
+  *ptr = "changed";
+  cout << "After string changed" << std::endl;
+  // It's bad to expose the raw internal pointer from its unique pointer,
+  // because it can change/delete the object.
+  cout << *ptr << " at " << ptr << std::endl;
+  cout << "internal pointer address = " << &ptr << std::endl;
+  /* Output:
+    string address = 0x55ff41792eb0
+    felix at 0x55ff41792eb0
+    felix at 0x55ff41792eb0
+    up0 address = 0x7ffc4a3e2638
+    internal pointer address = 0x7ffc4a3e2630
+    After std::move, internal pointer remains the same.
+    felix at 0x55ff41792eb0
+    felix at 0x55ff41792eb0
+    up1 address = 0x7ffc4a3e2628
+    internal pointer address = 0x7ffc4a3e2630
+    After string changed
+    changed at 0x55ff41792eb0
+    internal pointer address = 0x7ffc4a3e2630
+   */
 }

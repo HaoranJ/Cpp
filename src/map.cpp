@@ -8,7 +8,7 @@
 #include <deque>
 #include <iostream>
 
-int main() {
+int map() {
   std::unordered_map<int, int> map;
   // inserts
   map.insert(std::make_pair(1, 0));
