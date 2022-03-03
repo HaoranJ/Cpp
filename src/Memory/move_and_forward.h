@@ -1,6 +1,9 @@
 //
-// Created by haoranjia on 12/31/21.
+// Created by haoranjia on 1/21/22.
 //
+
+#ifndef SRC_MEMORY_MOVE_AND_FORWARD_H_
+#define SRC_MEMORY_MOVE_AND_FORWARD_H_
 #include <string>
 class Annotation {
  public:
@@ -30,13 +33,15 @@ void Process(Annotation&& rvalArg) {
 }
 
 template<typename T>
-LogAndProcess(T&& param) {
+void LogAndProcess(T&& param) {
   std::cout << "call Process().." << std::endl;
   process(std::forward<T>(param));
 }
 
 void StdForward() {
-  Annotation a;
+  Annotation a("forward");
   Process(a); // call with lvalue
   Process(std::move(a)); // call with rvalue
 }
+
+#endif //SRC_MEMORY_MOVE_AND_FORWARD_H_

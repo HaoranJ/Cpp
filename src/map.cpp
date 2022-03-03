@@ -20,4 +20,6 @@ int map() {
   } else {
     std::cout << itr->second;
   }
+
+  return 0;
 }

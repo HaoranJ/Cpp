@@ -98,6 +98,8 @@ void useObject(MyMovableClass obj) { //pass by value
   std::cout << "using object " << &obj << std::endl;
 }
 
+// compile: g++ rule_of_five.cc
+// run: ./a.out
 int main()
 {
   MyMovableClass obj1(10);   // regular constructor

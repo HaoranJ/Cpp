@@ -11,6 +11,7 @@
 #include <mutex>
 #include "ood.h"
 #include "algorithm_utils.h"
+#include "Memory/move_and_forward.h"
 #include <set>
 #include <regex>
 
@@ -44,8 +45,95 @@ void Setup(Vehicle* v) {
   v->LocalStaticVar();
 }
 
+class MyCircularQueue {
+public:
+    MyCircularQueue(int k) {
+      size_limit_ = k;
+      for (int i = 0; i < k; ++i) {
+        que_.push_back(0);
+      }
+    }
+
+    bool enQueue(int value) {
+      if (size_ == size_limit_) {
+        return false;
+      }
+      rear_idx_ = (rear_idx_ + 1) % size_limit_;
+      que_[rear_idx_] = value;
+      ++size_;
+      return true;
+    }
+
+    bool deQueue() {
+      if (size_ == 0) {
+        return false;
+      }
+      front_idx_ = (front_idx_ + 1) % size_limit_;
+      --size_;
+      return true;
+    }
+
+    int Front() {
+      if (size_ == 0) { return -1; }
+      return que_[front_idx_];
+    }
+
+    int Rear() {
+      if (size_ == 0) { return -1; }
+      return que_[rear_idx_];
+    }
+
+    bool isEmpty() {
+      return size_ == 0;
+    }
+
+    bool isFull() {
+      return size_ == size_limit_;
+    }
+ private:
+  std::vector<int> que_;
+  int size_limit_ = 0;
+  int front_idx_ = 0;
+  int rear_idx_ = -1;
+  int size_ = 0;
+};
+
+class MyClass {
+ public:
+  std::vector<Node> list_;
+  std::vector<Node> list() {
+    return list_;
+  };
+
+  std::vector<Node>& list_ref() {
+    return list_;
+  };
+};
+
 int main()
 {
+  MyClass c;
+  Node n1;
+  n1.val = 0;
+  c.list_.push_back(n1);
+  std::cout << "c.list_ = " << &(c.list_) << std::endl;
+  auto l1 = c.list();
+  auto l2 = c.list_ref();
+  std::cout << "l1 = " << &l1 << std::endl;
+  std::cout << "l2 = " << &l2 << std::endl;
+
+//  MyCircularQueue q(3);
+//  q.enQueue(1);
+//  q.enQueue(2);
+//  q.enQueue(3);
+//  q.enQueue(4);
+//  int r = q.Rear();
+//  bool full = q.isFull();
+//  q.deQueue();
+//  q.enQueue(5);
+//  int r1 = q.Rear();
+//  StdForward();
+
 //
 //  std::vector<std::thread> threads;
 //  Vehicle * v = new Vehicle();
