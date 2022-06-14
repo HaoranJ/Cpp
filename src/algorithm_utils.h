@@ -18,8 +18,11 @@ struct ListNode {
 
 class Node {
 public:
-    int val;
-    Node* left;
-    Node* right;
-    Node* parent;
+  ~Node() {
+    std::cout << "Node d'tor" << std::endl;
+  }
+  int val;
+  Node* left;
+  Node* right;
+  Node* parent;
 };
